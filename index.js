@@ -1,6 +1,8 @@
 'use strict';
 
-import React, {Component, PropTypes} from 'react';
+import React, {Component} from 'react';
+import PropTypes from 'prop-types';
+
 import {
     StyleSheet,
     View,
@@ -50,18 +52,18 @@ export default class PickerAndroid extends Component {
 
     shouldComponentUpdate(nextProps, nextState, context) {
         return JSON.stringify([{
-                selectedIndex: nextState.selectedIndex,
-                items: nextState.items,
-                pickerStyle: nextState.pickerStyle,
-                itemStyle: nextState.itemStyle,
-                onValueChange: nextState.onValueChange
-            }, context]) !== JSON.stringify([{
-                selectedIndex: this.state.selectedIndex,
-                items: this.state.items,
-                pickerStyle: this.state.pickerStyle,
-                itemStyle: this.state.itemStyle,
-                onValueChange: this.state.onValueChange
-            }, this.context]);
+            selectedIndex: nextState.selectedIndex,
+            items: nextState.items,
+            pickerStyle: nextState.pickerStyle,
+            itemStyle: nextState.itemStyle,
+            onValueChange: nextState.onValueChange
+        }, context]) !== JSON.stringify([{
+            selectedIndex: this.state.selectedIndex,
+            items: this.state.items,
+            pickerStyle: this.state.pickerStyle,
+            itemStyle: this.state.itemStyle,
+            onValueChange: this.state.onValueChange
+        }, this.context]);
     }
 
     _stateFromProps(props) {
@@ -70,10 +72,11 @@ export default class PickerAndroid extends Component {
         let pickerStyle = props.pickerStyle;
         let itemStyle = props.itemStyle;
         let onValueChange = props.onValueChange;
-        React.Children.forEach(props.children, (child, index) => {
+        React.Children.forEach(props.children, (child, index) = > {
             child.props.value === props.selectedValue && ( selectedIndex = index );
-            items.push({value: child.props.value, label: child.props.label});
-        });
+        items.push({value: child.props.value, label: child.props.label});
+    })
+        ;
         //fix issue#https://github.com/beefe/react-native-picker/issues/51
         this.index = selectedIndex;
         return {
@@ -153,11 +156,20 @@ export default class PickerAndroid extends Component {
 
     componentWillMount() {
         this._panResponder = PanResponder.create({
-            onMoveShouldSetPanResponder: (evt, gestureState) => true,
-            onMoveShouldSetPanResponderCapture: (evt, gestureState) => true,
-            onPanResponderRelease: this._handlePanResponderRelease.bind(this),
-            onPanResponderMove: this._handlePanResponderMove.bind(this)
-        });
+            onMoveShouldSetPanResponder: (evt, gestureState) = > true,
+            onMoveShouldSetPanResponderCapture
+    :
+        (evt, gestureState) =
+    >
+        true,
+            onPanResponderRelease
+    :
+        this._handlePanResponderRelease.bind(this),
+            onPanResponderMove
+    :
+        this._handlePanResponderMove.bind(this)
+    })
+        ;
         this.isMoving = false;
         this.index = this.state.selectedIndex;
     }
@@ -170,32 +182,59 @@ export default class PickerAndroid extends Component {
         //value was used to watch the change of picker
         //label was used to display
         let upItems = [], middleItems = [], downItems = [];
-        items.forEach((item, index) => {
+        items.forEach((item, index) = > {
 
-            upItems[index] = <Text
-                key={'up'+index}
-                style={[styles.upText, this.state.itemStyle]}
-                onPress={() => {
-			this._moveTo(index);
-		}}>
-                {item.label}
-            </Text>;
+            upItems[index] = < Text
+        key = {'up'+index}
+        style = {[styles.upText, this.state.itemStyle
+    ]
+    }
+        onPress = {() =
+    >
+        {
+            this._moveTo(index);
+        }
+    }>
+        {
+            item.label
+        }
+    <
+        /Text>;
 
-            middleItems[index] = <Text
-                key={'mid'+index}
-                style={[styles.middleText, this.state.itemStyle]}>{item.label}
-            </Text>;
+        middleItems[index] =
+    <
+        Text
+        key = {'mid'+index}
+        style = {[styles.middleText, this.state.itemStyle
+    ]
+    }>
+        {
+            item.label
+        }
+    <
+        /Text>;
 
-            downItems[index] = <Text
-                key={'down'+index}
-                style={[styles.downText, this.state.itemStyle]}
-                onPress={() => {
-			this._moveTo(index);
-		}}>
-                {item.label}
-            </Text>;
+        downItems[index] =
+    <
+        Text
+        key = {'down'+index}
+        style = {[styles.downText, this.state.itemStyle
+    ]
+    }
+        onPress = {() =
+    >
+        {
+            this._moveTo(index);
+        }
+    }>
+        {
+            item.label
+        }
+    <
+        /Text>;
 
-        });
+    })
+        ;
         return {upItems, middleItems, downItems,};
     }
 
@@ -226,27 +265,81 @@ export default class PickerAndroid extends Component {
 
         return (
             //total to be 90*2+40=220 height
-            <View style={[styles.container, this.state.pickerStyle]} {...this._panResponder.panHandlers}>
+            < View
+        style = {[styles.container, this.state.pickerStyle
+    ]
+    }
+        {...
+            this._panResponder.panHandlers
+        }
+    >
 
-                <View style={styles.up}>
-                    <View style={[styles.upView, upViewStyle]} ref={(up) => { this.up = up }}>
-                        { items.upItems }
-                    </View>
-                </View>
+    <
+        View
+        style = {styles.up
+    }>
+    <
+        View
+        style = {[styles.upView, upViewStyle
+    ]
+    }
+        ref = {(up) =
+    >
+        {
+            this.up = up
+        }
+    }>
+        {
+            items.upItems
+        }
+    <
+        /View>
+        < /View>
 
-                <View style={styles.middle}>
-                    <View style={[styles.middleView, middleViewStyle]} ref={(middle) => { this.middle = middle }}>
-                        { items.middleItems }
-                    </View>
-                </View>
+        < View
+        style = {styles.middle
+    }>
+    <
+        View
+        style = {[styles.middleView, middleViewStyle
+    ]
+    }
+        ref = {(middle) =
+    >
+        {
+            this.middle = middle
+        }
+    }>
+        {
+            items.middleItems
+        }
+    <
+        /View>
+        < /View>
 
-                <View style={styles.down}>
-                    <View style={[styles.downView, downViewStyle]} ref={(down) => { this.down = down }}>
-                        { items.downItems }
-                    </View>
-                </View>
-            </View>
-        );
+        < View
+        style = {styles.down
+    }>
+    <
+        View
+        style = {[styles.downView, downViewStyle
+    ]
+    }
+        ref = {(down) =
+    >
+        {
+            this.down = down
+        }
+    }>
+        {
+            items.downItems
+        }
+    <
+        /View>
+        < /View>
+        < /View>
+    )
+        ;
     }
 }
 
